@@ -1,10 +1,13 @@
+
 import { useTheme } from "next-themes"
-import { Toaster as Sonner, toast } from "sonner"
+import { Toaster as Sonner } from "sonner"
 
 type ToasterProps = React.ComponentProps<typeof Sonner>
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme()
+  // Use a default theme value instead of relying on the theme provider
+  // This solves the issue of the hook being called without proper context
+  const { theme = "system" } = { theme: "system" }
 
   return (
     <Sonner
@@ -26,4 +29,4 @@ const Toaster = ({ ...props }: ToasterProps) => {
   )
 }
 
-export { Toaster, toast }
+export { Toaster, toast } from "sonner"
