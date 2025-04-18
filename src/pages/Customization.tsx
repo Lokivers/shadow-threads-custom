@@ -41,7 +41,7 @@ const Customization = () => {
   }, [location.search]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white text-black">
       <Navbar />
       
       <main className="flex-grow mt-16 pt-8">
