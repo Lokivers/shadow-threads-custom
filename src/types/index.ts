@@ -10,6 +10,7 @@ export interface Product {
   images: string[];
   sizes: string[];
   isCustomizable?: boolean;
+  isVirtualTryOn?: boolean;
 }
 
 export interface CustomizationSettings {
@@ -26,4 +27,13 @@ export interface CartItem {
   size: string;
   customImage?: string;
   customizationSettings?: CustomizationSettings;
+}
+
+export interface VirtualTryOnSettings {
+  position: {
+    x: number;
+    y: number;
+  };
+  scale: number;
+  rotation: number;
 }

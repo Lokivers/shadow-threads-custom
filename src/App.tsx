@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import Customization from "./pages/Customization";
+import VirtualTryOn from "./pages/VirtualTryOn";
 import Cart from "./pages/Cart";
 import NotFound from "./pages/NotFound";
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/products/:category" element={<Products />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/customize" element={<Customization />} />
+          <Route path="/virtual-try-on" element={<VirtualTryOn />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
