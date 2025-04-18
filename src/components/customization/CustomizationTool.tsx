@@ -1,11 +1,14 @@
 
-import { useState, useRef, ChangeEvent, useEffect } from 'react';
+import { useState } from 'react';
 import { loadImage, removeBackground } from '@/utils/imageProcessor';
 import { Product } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Upload, X, Shirt, Image as ImageIcon, Undo, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, ZoomIn, ZoomOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from '@/components/ui/sonner';
+import PreviewArea from './PreviewArea';
+import ImageUpload from './ImageUpload';
+import ImageControls from './ImageControls';
+import SizeSelector from './SizeSelector';
 
 interface CustomizationToolProps {
   product: Product;
@@ -16,13 +19,10 @@ const CustomizationTool = ({ product }: CustomizationToolProps) => {
   const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0] || 'M');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  
-  // Image positioning state
   const [position, setPosition] = useState({ x: 50, y: 25 });
   const [scale, setScale] = useState(100);
 
-  const handleFileSelect = async (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -30,10 +30,7 @@ const CustomizationTool = ({ product }: CustomizationToolProps) => {
       setIsProcessing(true);
       setError(null);
       
-      // Load the image
       const imageElement = await loadImage(file);
-      
-      // Process the image (remove background)
       const processedImage = await removeBackground(imageElement);
       setUserImage(processedImage);
       
@@ -47,16 +44,8 @@ const CustomizationTool = ({ product }: CustomizationToolProps) => {
     }
   };
 
-  const handleUploadClick = () => {
-    fileInputRef.current?.click();
-  };
-
   const resetImage = () => {
     setUserImage(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-    // Reset position and scale
     setPosition({ x: 50, y: 25 });
     setScale(100);
   };
@@ -90,8 +79,6 @@ const CustomizationTool = ({ product }: CustomizationToolProps) => {
   };
 
   const addToCart = () => {
-    // In a real app, this would add the item to the cart
-    // For now, we'll just log it
     console.log('Added to cart:', {
       product,
       size: selectedSize,
@@ -108,151 +95,35 @@ const CustomizationTool = ({ product }: CustomizationToolProps) => {
       <h3 className="text-xl font-bold mb-4">Customize Your T-Shirt</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Preview Area */}
-        <div className="bg-gray-100 rounded-lg aspect-square relative overflow-hidden flex items-center justify-center">
-          {/* T-shirt Base Image */}
-          <img 
-            src={product.images[0] || 'https://placehold.co/400x400/000000/FFFFFF/png?text=T-Shirt'}
-            alt={product.name}
-            className="w-full h-full object-contain"
+        <PreviewArea 
+          productImage={product.images[0]}
+          productName={product.name}
+          userImage={userImage}
+          position={position}
+          scale={scale}
+          isProcessing={isProcessing}
+        />
+        
+        <div className="space-y-6">
+          <ImageUpload 
+            onFileSelect={handleFileSelect}
+            onReset={resetImage}
+            hasImage={!!userImage}
+            error={error}
           />
           
-          {/* User Image Overlay */}
           {userImage && (
-            <div 
-              className="absolute"
-              style={{
-                top: `${position.y}%`,
-                left: `${position.x}%`,
-                width: `${scale/2}%`,
-                height: `${scale/2}%`,
-                transform: 'translate(-50%, -50%)'
-              }}
-            >
-              <img 
-                src={userImage}
-                alt="User uploaded image"
-                className="w-full h-full object-contain"
-              />
-            </div>
-          )}
-          
-          {/* Processing Indicator */}
-          {isProcessing && (
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white mx-auto"></div>
-                <p className="mt-2">Processing image...</p>
-              </div>
-            </div>
-          )}
-        </div>
-        
-        {/* Controls */}
-        <div className="space-y-6">
-          <div>
-            <h4 className="text-lg font-medium mb-2">Upload Your Face</h4>
-            <p className="text-sm text-gray-500 mb-4">
-              We'll automatically remove the background of your photo to create a custom design.
-            </p>
-            
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileSelect}
-              accept="image/*"
-              className="hidden"
+            <ImageControls 
+              onMove={moveImage}
+              onScale={adjustScale}
             />
-            
-            <div className="flex flex-wrap gap-2">
-              <Button 
-                onClick={handleUploadClick} 
-                className="flex items-center gap-2 bg-black hover:bg-gray-800 text-white"
-              >
-                <Upload size={16} />
-                Upload Photo
-              </Button>
-              
-              {userImage && (
-                <Button 
-                  onClick={resetImage} 
-                  variant="outline"
-                  className="flex items-center gap-2 border-black text-black"
-                >
-                  <Undo size={16} />
-                  Reset
-                </Button>
-              )}
-            </div>
-            
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-          </div>
-          
-          {userImage && (
-            <div>
-              <h4 className="text-lg font-medium mb-2">Adjust Your Image</h4>
-              <div className="grid grid-cols-3 gap-2 mb-4">
-                <Button 
-                  onClick={() => moveImage('up')} 
-                  variant="outline"
-                  className="border-black text-black"
-                >
-                  <ArrowUp size={16} />
-                </Button>
-                <Button 
-                  onClick={() => moveImage('down')} 
-                  variant="outline"
-                  className="border-black text-black"
-                >
-                  <ArrowDown size={16} />
-                </Button>
-                <Button 
-                  onClick={() => moveImage('left')} 
-                  variant="outline"
-                  className="border-black text-black"
-                >
-                  <ArrowLeft size={16} />
-                </Button>
-                <Button 
-                  onClick={() => moveImage('right')} 
-                  variant="outline"
-                  className="border-black text-black"
-                >
-                  <ArrowRight size={16} />
-                </Button>
-                <Button 
-                  onClick={() => adjustScale(true)} 
-                  variant="outline"
-                  className="border-black text-black"
-                >
-                  <ZoomIn size={16} />
-                </Button>
-                <Button 
-                  onClick={() => adjustScale(false)} 
-                  variant="outline"
-                  className="border-black text-black"
-                >
-                  <ZoomOut size={16} />
-                </Button>
-              </div>
-            </div>
           )}
           
-          <div>
-            <h4 className="text-lg font-medium mb-2">Select Size</h4>
-            <div className="flex flex-wrap gap-2">
-              {product.sizes.map((size) => (
-                <Button
-                  key={size}
-                  variant={selectedSize === size ? "default" : "outline"}
-                  className={selectedSize === size ? "bg-black hover:bg-gray-800 text-white" : "border-black text-black"}
-                  onClick={() => setSelectedSize(size)}
-                >
-                  {size}
-                </Button>
-              ))}
-            </div>
-          </div>
+          <SizeSelector 
+            sizes={product.sizes}
+            selectedSize={selectedSize}
+            onSizeSelect={setSelectedSize}
+          />
           
           <div className="pt-4">
             <Button 
