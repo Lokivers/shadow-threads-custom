@@ -1,23 +1,33 @@
 
 import { Button } from '@/components/ui/button';
-import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, ZoomIn, ZoomOut } from 'lucide-react';
+import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, ZoomIn, ZoomOut, RotateCw, RotateCcw } from 'lucide-react';
 
 interface ImageControlsProps {
   onMove: (direction: 'up' | 'down' | 'left' | 'right') => void;
   onScale: (increase: boolean) => void;
+  onRotate: (clockwise: boolean) => void;
 }
 
-const ImageControls = ({ onMove, onScale }: ImageControlsProps) => {
+const ImageControls = ({ onMove, onScale, onRotate }: ImageControlsProps) => {
   return (
     <div>
-      <h4 className="text-lg font-medium mb-2">Adjust Your Image</h4>
+      <h4 className="text-lg font-medium mb-2">Adjust Your Logo</h4>
       <div className="grid grid-cols-3 gap-2 mb-4">
+        <div className="col-start-2">
+          <Button 
+            onClick={() => onMove('up')} 
+            variant="outline"
+            className="w-full border-black text-black"
+          >
+            <ArrowUp size={16} />
+          </Button>
+        </div>
         <Button 
-          onClick={() => onMove('up')} 
+          onClick={() => onMove('left')} 
           variant="outline"
           className="border-black text-black"
         >
-          <ArrowUp size={16} />
+          <ArrowLeft size={16} />
         </Button>
         <Button 
           onClick={() => onMove('down')} 
@@ -27,19 +37,30 @@ const ImageControls = ({ onMove, onScale }: ImageControlsProps) => {
           <ArrowDown size={16} />
         </Button>
         <Button 
-          onClick={() => onMove('left')} 
-          variant="outline"
-          className="border-black text-black"
-        >
-          <ArrowLeft size={16} />
-        </Button>
-        <Button 
           onClick={() => onMove('right')} 
           variant="outline"
           className="border-black text-black"
         >
           <ArrowRight size={16} />
         </Button>
+        
+        <Button 
+          onClick={() => onRotate(true)} 
+          variant="outline"
+          className="border-black text-black"
+          title="Rotate Clockwise"
+        >
+          <RotateCw size={16} />
+        </Button>
+        <Button 
+          onClick={() => onRotate(false)} 
+          variant="outline"
+          className="border-black text-black"
+          title="Rotate Counter-Clockwise"
+        >
+          <RotateCcw size={16} />
+        </Button>
+        
         <Button 
           onClick={() => onScale(true)} 
           variant="outline"

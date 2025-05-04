@@ -2,18 +2,34 @@
 interface PreviewAreaProps {
   productImage: string;
   productName: string;
+  neckStyle: string;
   userImage: string | null;
   position: { x: number; y: number };
   scale: number;
+  rotation: number;
+  customText: string;
+  textPosition: { x: number; y: number };
+  textScale: number;
+  textRotation: number;
+  textFont: string;
+  textColor: string;
   isProcessing: boolean;
 }
 
 const PreviewArea = ({ 
   productImage, 
   productName, 
+  neckStyle,
   userImage, 
   position, 
   scale,
+  rotation,
+  customText,
+  textPosition,
+  textScale,
+  textRotation,
+  textFont,
+  textColor,
   isProcessing 
 }: PreviewAreaProps) => {
   return (
@@ -28,13 +44,13 @@ const PreviewArea = ({
       {/* User Image Overlay */}
       {userImage && (
         <div 
-          className="absolute"
+          className="absolute pointer-events-none"
           style={{
             top: `${position.y}%`,
             left: `${position.x}%`,
             width: `${scale/2}%`,
             height: `${scale/2}%`,
-            transform: 'translate(-50%, -50%)'
+            transform: `translate(-50%, -50%) rotate(${rotation}deg)`
           }}
         >
           <img 
@@ -42,6 +58,23 @@ const PreviewArea = ({
             alt="User uploaded image"
             className="w-full h-full object-contain"
           />
+        </div>
+      )}
+
+      {/* Custom Text Overlay */}
+      {customText && (
+        <div 
+          className="absolute pointer-events-none whitespace-nowrap"
+          style={{
+            top: `${textPosition.y}%`,
+            left: `${textPosition.x}%`,
+            transform: `translate(-50%, -50%) rotate(${textRotation}deg)`,
+            fontSize: `${textScale/4}px`,
+            fontFamily: textFont,
+            color: textColor
+          }}
+        >
+          {customText}
         </div>
       )}
       
