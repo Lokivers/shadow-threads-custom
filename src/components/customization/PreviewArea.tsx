@@ -52,7 +52,7 @@ const PreviewArea = ({
     <div className="bg-gray-100 rounded-lg aspect-square relative overflow-hidden flex items-center justify-center">
       {/* T-shirt Base Image */}
       <img 
-        src={productImage || 'https://placehold.co/400x400/000000/FFFFFF/png?text=T-Shirt'}
+        src={productImage || 'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?q=80&w=3087&auto=format&fit=crop'}
         alt={productName}
         className="w-full h-full object-contain"
       />

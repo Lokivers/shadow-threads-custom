@@ -112,7 +112,7 @@ const CustomizationTool = ({ product }: CustomizationToolProps) => {
           isProcessing={isProcessing}
           onTextDragStart={handleTextDragStart}
           onTextDragEnd={handleTextDragEnd}
-          onTextDrag={handleTextDrag}
+          onTextDrag={(e) => handleTextDrag(e)}
         />
         
         <div className="space-y-6">

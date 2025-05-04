@@ -37,10 +37,10 @@ const Index = () => {
               </div>
             </div>
           </div>
-          <div className="absolute bottom-0 right-0 w-full md:w-1/2 h-full z-0 opacity-30 md:opacity-50">
+          <div className="absolute bottom-0 right-0 w-full md:w-1/2 h-full z-0 opacity-30 md:opacity-80">
             <div className="w-full h-full bg-gradient-to-t from-black via-transparent to-transparent"></div>
             <img 
-              src="https://placehold.co/800x1000/000000/FFFFFF/png?text=Hero+Image" 
+              src="https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=3271&auto=format&fit=crop" 
               alt="Hero" 
               className="absolute inset-0 w-full h-full object-cover object-center"
             />
@@ -56,7 +56,7 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="relative aspect-[3/4] group overflow-hidden">
               <img 
-                src="https://placehold.co/600x800/000000/FFFFFF/png?text=T-Shirts" 
+                src="https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?q=80&w=2787&auto=format&fit=crop" 
                 alt="T-Shirts" 
                 className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
               />
@@ -74,7 +74,7 @@ const Index = () => {
             
             <div className="relative aspect-[3/4] group overflow-hidden">
               <img 
-                src="https://placehold.co/600x800/000000/FFFFFF/png?text=Dresses" 
+                src="https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?q=80&w=1935&auto=format&fit=crop" 
                 alt="Dresses" 
                 className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
               />
@@ -115,7 +115,7 @@ const Index = () => {
             </div>
             <div className="md:w-1/3">
               <img 
-                src="https://placehold.co/400x400/000000/FFFFFF/png?text=Customization" 
+                src="https://images.unsplash.com/photo-1603252109360-909baaf261c7?q=80&w=2940&auto=format&fit=crop" 
                 alt="Customization" 
                 className="w-full rounded-lg"
               />
