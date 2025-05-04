@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, RotateCw, RotateCcw, ZoomIn, ZoomOut, Text } from 'lucide-react';
+import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, RotateCw, RotateCcw, ZoomIn, ZoomOut, Move, Text } from 'lucide-react';
 
 interface TextCustomizerProps {
   text: string;
@@ -21,7 +21,9 @@ const fontOptions = [
   { value: 'Times New Roman', label: 'Times New Roman' },
   { value: 'Courier New', label: 'Courier New' },
   { value: 'Georgia', label: 'Georgia' },
-  { value: 'Tahoma', label: 'Tahoma' }
+  { value: 'Tahoma', label: 'Tahoma' },
+  { value: 'Impact', label: 'Impact' },
+  { value: 'Comic Sans MS', label: 'Comic Sans MS' }
 ];
 
 const colorOptions = [
@@ -30,7 +32,11 @@ const colorOptions = [
   { value: '#FF0000', label: 'Red' },
   { value: '#00FF00', label: 'Green' },
   { value: '#0000FF', label: 'Blue' },
-  { value: '#FFFF00', label: 'Yellow' }
+  { value: '#FFFF00', label: 'Yellow' },
+  { value: '#FF00FF', label: 'Pink' },
+  { value: '#00FFFF', label: 'Cyan' },
+  { value: '#FFA500', label: 'Orange' },
+  { value: '#800080', label: 'Purple' }
 ];
 
 const TextCustomizer = ({
@@ -98,7 +104,13 @@ const TextCustomizer = ({
       
       {text && (
         <>
-          <h5 className="font-medium">Adjust Text Position</h5>
+          <div className="bg-blue-50 p-3 rounded-md border border-blue-200 mb-2">
+            <p className="text-sm text-blue-700">
+              <strong>Tip:</strong> You can freely drag the text on the preview area to position it exactly where you want.
+            </p>
+          </div>
+          
+          <h5 className="font-medium">Fine-Tune Text Position</h5>
           <div className="grid grid-cols-3 gap-2 mb-4">
             <div className="col-start-2">
               <Button 

@@ -11,6 +11,7 @@ import ImageControls from './ImageControls';
 import SizeSelector from './SizeSelector';
 import NeckStyleSelector from './NeckStyleSelector';
 import TextCustomizer from './TextCustomizer';
+import LogoUpload from './LogoUpload';
 
 interface CustomizationToolProps {
   product: Product;
@@ -33,18 +34,31 @@ const CustomizationTool = ({ product }: CustomizationToolProps) => {
     textScale,
     textFont,
     textColor,
+    isDraggingText,
+    logoImage,
+    logoPosition,
+    logoRotation,
+    logoScale,
     handleFileSelect,
+    handleLogoSelect,
     resetImage,
     resetText,
+    resetLogo,
     moveImage,
     moveText,
+    moveLogo,
     adjustScale,
     adjustTextScale,
+    adjustLogoScale,
     rotateImage,
     rotateText,
+    rotateLogo,
     setCustomText,
     setTextFont,
-    setTextColor
+    setTextColor,
+    handleTextDragStart,
+    handleTextDragEnd,
+    handleTextDrag
   } = useImageCustomization();
 
   const addToCart = () => {
@@ -61,7 +75,11 @@ const CustomizationTool = ({ product }: CustomizationToolProps) => {
       textScale,
       textRotation,
       textFont,
-      textColor
+      textColor,
+      logoImage,
+      logoPosition,
+      logoRotation,
+      logoScale
     });
     
     toast.success("Added to cart!");
@@ -86,7 +104,15 @@ const CustomizationTool = ({ product }: CustomizationToolProps) => {
           textRotation={textRotation}
           textFont={textFont}
           textColor={textColor}
+          isDraggingText={isDraggingText}
+          logoImage={logoImage}
+          logoPosition={logoPosition}
+          logoScale={logoScale}
+          logoRotation={logoRotation}
           isProcessing={isProcessing}
+          onTextDragStart={handleTextDragStart}
+          onTextDragEnd={handleTextDragEnd}
+          onTextDrag={handleTextDrag}
         />
         
         <div className="space-y-6">
@@ -109,6 +135,15 @@ const CustomizationTool = ({ product }: CustomizationToolProps) => {
               onRotate={rotateImage}
             />
           )}
+
+          <LogoUpload
+            onFileSelect={handleLogoSelect}
+            onReset={resetLogo}
+            onMove={moveLogo}
+            onRotate={rotateLogo}
+            onScale={adjustLogoScale}
+            hasLogo={!!logoImage}
+          />
           
           <TextCustomizer 
             text={customText}

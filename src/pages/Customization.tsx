@@ -44,12 +44,12 @@ const Customization = () => {
     <div className="min-h-screen flex flex-col bg-white text-black">
       <Navbar />
       
-      <main className="flex-grow mt-16 pt-8">
+      <main className="flex-grow mt-16 pt-8 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <header className="mb-8">
             <h1 className="text-3xl font-bold tracking-tight">Customize Your T-Shirt</h1>
             <p className="mt-2 text-lg text-gray-600">
-              Upload your photo, we'll remove the background, and see how it looks on our premium t-shirts.
+              Upload your photos, add text and logos, and design your perfect custom t-shirt.
             </p>
           </header>
           

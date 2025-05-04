@@ -13,7 +13,15 @@ interface PreviewAreaProps {
   textRotation: number;
   textFont: string;
   textColor: string;
+  isDraggingText: boolean;
+  logoImage: string | null;
+  logoPosition: { x: number; y: number };
+  logoScale: number;
+  logoRotation: number;
   isProcessing: boolean;
+  onTextDragStart: () => void;
+  onTextDragEnd: () => void;
+  onTextDrag: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 const PreviewArea = ({ 
@@ -30,7 +38,15 @@ const PreviewArea = ({
   textRotation,
   textFont,
   textColor,
-  isProcessing 
+  isDraggingText,
+  logoImage,
+  logoPosition,
+  logoScale,
+  logoRotation,
+  isProcessing,
+  onTextDragStart,
+  onTextDragEnd,
+  onTextDrag
 }: PreviewAreaProps) => {
   return (
     <div className="bg-gray-100 rounded-lg aspect-square relative overflow-hidden flex items-center justify-center">
@@ -61,18 +77,43 @@ const PreviewArea = ({
         </div>
       )}
 
-      {/* Custom Text Overlay */}
+      {/* Logo Image Overlay */}
+      {logoImage && (
+        <div 
+          className="absolute pointer-events-none"
+          style={{
+            top: `${logoPosition.y}%`,
+            left: `${logoPosition.x}%`,
+            width: `${logoScale/2}%`,
+            height: `${logoScale/2}%`,
+            transform: `translate(-50%, -50%) rotate(${logoRotation}deg)`
+          }}
+        >
+          <img 
+            src={logoImage}
+            alt="Logo image"
+            className="w-full h-full object-contain"
+          />
+        </div>
+      )}
+
+      {/* Custom Text Overlay - Now Draggable */}
       {customText && (
         <div 
-          className="absolute pointer-events-none whitespace-nowrap"
+          className={`absolute whitespace-nowrap ${isDraggingText ? 'cursor-grabbing' : 'cursor-grab'}`}
           style={{
             top: `${textPosition.y}%`,
             left: `${textPosition.x}%`,
             transform: `translate(-50%, -50%) rotate(${textRotation}deg)`,
             fontSize: `${textScale/4}px`,
             fontFamily: textFont,
-            color: textColor
+            color: textColor,
+            userSelect: 'none',
+            zIndex: 10
           }}
+          onMouseDown={onTextDragStart}
+          onMouseUp={onTextDragEnd}
+          onMouseMove={isDraggingText ? onTextDrag : undefined}
         >
           {customText}
         </div>
