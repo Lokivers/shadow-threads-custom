@@ -3,7 +3,6 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Camera } from 'lucide-react';
 import { Product, VirtualTryOnSettings } from '@/types';
-import { useCamera } from '@/hooks/useCamera';
 
 interface CameraPreviewProps {
   product: Product;
