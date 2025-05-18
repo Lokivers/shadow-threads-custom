@@ -13,7 +13,8 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1618354691438-25bc04584c23?q=80&w=2415&auto=format&fit=crop"
     ],
     sizes: ["S", "M", "L", "XL"],
-    isCustomizable: true
+    isCustomizable: true,
+    isVirtualTryOn: true
   },
   {
     id: "tshirt-2",
@@ -26,7 +27,8 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=2080&auto=format&fit=crop"
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
-    isCustomizable: true
+    isCustomizable: true,
+    isVirtualTryOn: true
   },
   {
     id: "tshirt-3",
@@ -39,7 +41,8 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1503341338985-c0477be52513?q=80&w=2487&auto=format&fit=crop"
     ],
     sizes: ["S", "M", "L", "XL"],
-    isCustomizable: false
+    isCustomizable: false,
+    isVirtualTryOn: true
   },
   {
     id: "dress-1",
@@ -52,7 +55,8 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?q=80&w=3087&auto=format&fit=crop"
     ],
     sizes: ["XS", "S", "M", "L"],
-    isCustomizable: false
+    isCustomizable: false,
+    isVirtualTryOn: false
   },
   {
     id: "dress-2",
@@ -65,7 +69,8 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1550639525-c97d455acf70?q=80&w=2826&auto=format&fit=crop"
     ],
     sizes: ["XS", "S", "M", "L", "XL"],
-    isCustomizable: false
+    isCustomizable: false,
+    isVirtualTryOn: false
   },
   {
     id: "tshirt-4",
@@ -78,7 +83,8 @@ export const products: Product[] = [
       "https://images.unsplash.com/photo-1564859227552-81fde4a1df0b?q=80&w=3271&auto=format&fit=crop"
     ],
     sizes: ["S", "M", "L", "XL"],
-    isCustomizable: true
+    isCustomizable: true,
+    isVirtualTryOn: true
   }
 ];
 
@@ -92,6 +98,10 @@ export const getProductsByCategory = (category: string): Product[] => {
 
 export const getCustomizableProducts = (): Product[] => {
   return products.filter(product => product.isCustomizable);
+};
+
+export const getVirtualTryOnProducts = (): Product[] => {
+  return products.filter(product => product.isVirtualTryOn);
 };
 
 export const getFeaturedProducts = (limit: number = 3): Product[] => {

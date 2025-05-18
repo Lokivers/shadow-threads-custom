@@ -19,13 +19,16 @@ export const useImageCustomization = () => {
   const [textFont, setTextFont] = useState("Arial");
   const [textColor, setTextColor] = useState("#000000");
   const [isDraggingText, setIsDraggingText] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   
   // Logo states
   const [logoImage, setLogoImage] = useState<string | null>(null);
   const [logoPosition, setLogoPosition] = useState({ x: 50, y: 70 });
   const [logoRotation, setLogoRotation] = useState(0);
   const [logoScale, setLogoScale] = useState(60);
+  const [isDraggingLogo, setIsDraggingLogo] = useState(false);
+
+  // User image dragging state
+  const [isDraggingUserImage, setIsDraggingUserImage] = useState(false);
 
   // Handle image upload and background removal
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -212,14 +215,10 @@ export const useImageCustomization = () => {
     });
   };
 
-  // Text drag functions for free movement
+  // Free Dragging Functions for Text
   const handleTextDragStart = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDraggingText(true);
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
-    const offsetY = e.clientY - rect.top;
-    setDragOffset({ x: offsetX, y: offsetY });
   };
 
   const handleTextDragEnd = () => {
@@ -241,11 +240,67 @@ export const useImageCustomization = () => {
     });
   };
 
+  // Free Dragging Functions for User Image
+  const handleUserImageDragStart = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDraggingUserImage(true);
+  };
+
+  const handleUserImageDragEnd = () => {
+    setIsDraggingUserImage(false);
+  };
+
+  const handleUserImageDrag = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDraggingUserImage) return;
+
+    const previewArea = (e.currentTarget.parentElement as HTMLElement);
+    const rect = previewArea.getBoundingClientRect();
+    
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    setPosition({
+      x: Math.max(0, Math.min(100, x)),
+      y: Math.max(0, Math.min(100, y))
+    });
+  };
+
+  // Free Dragging Functions for Logo
+  const handleLogoDragStart = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDraggingLogo(true);
+  };
+
+  const handleLogoDragEnd = () => {
+    setIsDraggingLogo(false);
+  };
+
+  const handleLogoDrag = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDraggingLogo) return;
+
+    const previewArea = (e.currentTarget.parentElement as HTMLElement);
+    const rect = previewArea.getBoundingClientRect();
+    
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    setLogoPosition({
+      x: Math.max(0, Math.min(100, x)),
+      y: Math.max(0, Math.min(100, y))
+    });
+  };
+
   // Add event listener to handle drag ending if mouse is released outside the element
   useEffect(() => {
     const handleGlobalMouseUp = () => {
       if (isDraggingText) {
         setIsDraggingText(false);
+      }
+      if (isDraggingUserImage) {
+        setIsDraggingUserImage(false);
+      }
+      if (isDraggingLogo) {
+        setIsDraggingLogo(false);
       }
     };
 
@@ -254,7 +309,7 @@ export const useImageCustomization = () => {
     return () => {
       window.removeEventListener('mouseup', handleGlobalMouseUp);
     };
-  }, [isDraggingText]);
+  }, [isDraggingText, isDraggingUserImage, isDraggingLogo]);
 
   return {
     userImage,
@@ -274,6 +329,8 @@ export const useImageCustomization = () => {
     logoPosition,
     logoRotation,
     logoScale,
+    isDraggingLogo,
+    isDraggingUserImage,
     handleFileSelect,
     handleLogoSelect,
     resetImage,
@@ -293,6 +350,12 @@ export const useImageCustomization = () => {
     setTextColor,
     handleTextDragStart,
     handleTextDragEnd,
-    handleTextDrag
+    handleTextDrag,
+    handleUserImageDragStart,
+    handleUserImageDragEnd,
+    handleUserImageDrag,
+    handleLogoDragStart,
+    handleLogoDragEnd,
+    handleLogoDrag
   };
 };

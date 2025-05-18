@@ -34,13 +34,18 @@ function resizeImageIfNeeded(canvas: HTMLCanvasElement, ctx: CanvasRenderingCont
 export const removeBackground = async (imageElement: HTMLImageElement): Promise<string> => {
   try {
     console.log('Starting background removal process...');
-    const segmenter = await pipeline('image-segmentation', 'Xenova/segformer-b0-finetuned-ade-512-512', {
+    
+    // Use a more accurate segmentation model for better results
+    const segmenter = await pipeline('image-segmentation', 'Xenova/segformer-b2-finetuned-ade-512-512', {
       device: 'webgpu',
+      progress_callback: (progress) => {
+        console.log(`Loading model: ${Math.round(progress.progress * 100)}%`);
+      }
     });
     
     // Convert HTMLImageElement to canvas
     const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     
     if (!ctx) throw new Error('Could not get canvas context');
     
@@ -49,14 +54,16 @@ export const removeBackground = async (imageElement: HTMLImageElement): Promise<
     console.log(`Image ${wasResized ? 'was' : 'was not'} resized. Final dimensions: ${canvas.width}x${canvas.height}`);
     
     // Get image data as base64
-    const imageData = canvas.toDataURL('image/jpeg', 0.8);
+    const imageData = canvas.toDataURL('image/jpeg', 0.9);
     console.log('Image converted to base64');
     
     // Process the image with the segmentation model
     console.log('Processing with segmentation model...');
-    const result = await segmenter(imageData);
+    const result = await segmenter(imageData, { 
+      threshold: 0.75, // Higher threshold for more accurate segmentation
+    });
     
-    console.log('Segmentation result:', result);
+    console.log('Segmentation result received');
     
     if (!result || !Array.isArray(result) || result.length === 0 || !result[0].mask) {
       throw new Error('Invalid segmentation result');
@@ -66,7 +73,7 @@ export const removeBackground = async (imageElement: HTMLImageElement): Promise<
     const outputCanvas = document.createElement('canvas');
     outputCanvas.width = canvas.width;
     outputCanvas.height = canvas.height;
-    const outputCtx = outputCanvas.getContext('2d');
+    const outputCtx = outputCanvas.getContext('2d', { willReadFrequently: true });
     
     if (!outputCtx) throw new Error('Could not get output canvas context');
     
@@ -81,10 +88,16 @@ export const removeBackground = async (imageElement: HTMLImageElement): Promise<
     );
     const data = outputImageData.data;
     
+    // Choose the person class if it exists, otherwise use the largest segment
+    const personClassIndex = result.findIndex(r => r.label === 'person');
+    const maskIndex = personClassIndex >= 0 ? personClassIndex : 0;
+    
     // Apply inverted mask to alpha channel
-    for (let i = 0; i < result[0].mask.data.length; i++) {
+    for (let i = 0; i < result[maskIndex].mask.data.length; i++) {
       // Invert the mask value (1 - value) to keep the subject instead of the background
-      const alpha = Math.round((1 - result[0].mask.data[i]) * 255);
+      // Use a threshold to make the mask more binary (less feathering)
+      const maskValue = result[maskIndex].mask.data[i];
+      const alpha = maskValue > 0.15 ? 255 : 0;
       data[i * 4 + 3] = alpha;
     }
     

@@ -1,31 +1,36 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
 
 interface SizeSelectorTryOnProps {
   sizes: string[];
   selectedSize: string;
   onSizeSelect: (size: string) => void;
+  disabled?: boolean;
 }
 
-const SizeSelectorTryOn: React.FC<SizeSelectorTryOnProps> = ({
-  sizes,
-  selectedSize,
-  onSizeSelect
+const SizeSelectorTryOn: React.FC<SizeSelectorTryOnProps> = ({ 
+  sizes, 
+  selectedSize, 
+  onSizeSelect,
+  disabled = false
 }) => {
   return (
     <div>
       <h4 className="text-lg font-medium mb-2">Select Size</h4>
-      <div className="flex flex-wrap gap-2">
+      <div className="grid grid-cols-4 gap-2">
         {sizes.map((size) => (
-          <Button
+          <button
             key={size}
-            variant={selectedSize === size ? "default" : "outline"}
-            className={selectedSize === size ? "bg-black hover:bg-gray-800 text-white" : "border-black text-black"}
-            onClick={() => onSizeSelect(size)}
+            className={`py-2 border ${
+              selectedSize === size 
+                ? 'bg-black text-white border-black' 
+                : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+            } rounded-md transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover-scale'}`}
+            onClick={() => !disabled && onSizeSelect(size)}
+            disabled={disabled}
           >
             {size}
-          </Button>
+          </button>
         ))}
       </div>
     </div>
